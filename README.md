@@ -12,12 +12,59 @@ Minimalistic Windows desktop app for TOTP two-factor authentication codes. Nativ
 
 ## Build
 
-Requires Rust toolchain on Windows x64.
+### On Windows (native)
+
+**1. Install Microsoft C++ Build Tools**
+
+The MSVC linker and Windows SDK are required. You have two options:
+
+- **Option A (recommended):** Install [Visual Studio](https://visualstudio.microsoft.com/downloads/) (Community edition is free) and select the **"Desktop development with C++"** workload during setup. This includes the MSVC compiler, linker, and Windows SDK.
+- **Option B (lighter):** Install the standalone [Microsoft C++ Build Tools](https://visualstudio.microsoft.com/visual-cpp-build-tools/) and select the same **"Desktop development with C++"** workload.
+
+> Note: A valid Visual Studio license (Community, Pro, or Enterprise) is required even for the standalone Build Tools.
+
+**2. Install Rust**
+
+Download and run the installer from [rustup.rs](https://rustup.rs). It will detect Windows and default to the MSVC toolchain (`stable-x86_64-pc-windows-msvc`). When prompted about installing MSVC prerequisites, select the default options.
+
+After installation, verify with:
+```powershell
+cargo --version
+```
+
+**3. Build**
 
 ```powershell
 cargo build --release
-# output: target/release/totp-win-app.exe
+# output: target\release\totp-win-app.exe
 ```
+
+### On Linux (cross-compile for Windows)
+
+You can produce a Windows `.exe` from a Linux machine using MinGW-w64.
+
+**1. Install the MinGW-w64 cross-compiler** (Debian/Ubuntu):
+
+```bash
+sudo apt install gcc-mingw-w64-x86-64 binutils-mingw-w64-x86-64
+```
+
+**2. Add the Windows target to your Rust toolchain:**
+
+```bash
+rustup target add x86_64-pc-windows-gnu
+```
+
+**3. Build:**
+
+```bash
+cargo build --release --target x86_64-pc-windows-gnu
+# output: target/x86_64-pc-windows-gnu/release/totp-win-app.exe
+```
+
+The `.cargo/config.toml` in this repo already configures Cargo to use `x86_64-w64-mingw32-gcc` as the linker, and `build.rs` handles the Windows resource (icon) embedding via `x86_64-w64-mingw32-windres` automatically.
+
+> **Note:** The output `.exe` is a standalone PE32+ GUI binary — no Wine or Windows emulator needed to build it. You do need Windows to _run_ it.
 
 ## Setup
 
