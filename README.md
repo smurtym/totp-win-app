@@ -10,6 +10,10 @@ Minimalistic Windows desktop app for TOTP two-factor authentication codes. Nativ
 - Custom icon in taskbar, title bar, and File Explorer
 - File-based config — no database, no UI for managing accounts
 
+## Download
+
+Pre-built Windows executables are available on the [Releases](../../releases) page — no build tools required. Download `totp-win-app.exe` from the latest release, place it next to your `secrets.txt`, and run it.
+
 ## Build
 
 ### On Windows (native)

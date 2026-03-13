@@ -1,0 +1,33 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"   # triggers on tags like v1.0.0, v1.2.3, etc.
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write   # needed to create a release and upload assets
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install MinGW-w64 cross-compiler
+        run: sudo apt-get install -y gcc-mingw-w64-x86-64 binutils-mingw-w64-x86-64
+
+      - name: Install Rust stable
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: x86_64-pc-windows-gnu
+
+      - name: Build Windows release binary
+        run: cargo build --release --target x86_64-pc-windows-gnu
+
+      - name: Create GitHub Release and upload exe
+        uses: softprops/action-gh-release@v2
+        with:
+          files: target/x86_64-pc-windows-gnu/release/totp-win-app.exe
