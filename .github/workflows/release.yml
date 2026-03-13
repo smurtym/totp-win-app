@@ -24,6 +24,9 @@ jobs:
         with:
           targets: x86_64-pc-windows-gnu
 
+      - name: Cache Rust dependencies
+        uses: Swatinem/rust-cache@v2
+
       - name: Build Windows release binary
         run: cargo build --release
 
@@ -31,3 +34,4 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           files: target/x86_64-pc-windows-gnu/release/totp-win-app.exe
+          generate_release_notes: true
